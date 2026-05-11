@@ -1,0 +1,34 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
+        # find the node and replace it with left largest node
+        if not root:
+            return None
+        
+        if key > root.val:
+            root.right = self.deleteNode(root.right, key)
+        elif key < root.val:
+            root.left = self.deleteNode(root.left, key)
+        else:
+            # check the structure of subtree
+            if not root.left:
+                return root.right
+            elif not root.right:
+                return root.left
+            else:
+                val = self.findLargest(root.left)
+                root.val = val
+                root.left = self.deleteNode(root.left, val)
+            
+        return root
+
+    def findLargest(self, node):
+        while node.right:
+            node = node.right
+        return node.val
+        
